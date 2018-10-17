@@ -1,0 +1,28 @@
+1.单行插入
+  语法：INSERT INTO 表名(字段名) VALUES(值列表)
+  示例：INSERT INTO Student(name,address,grade,email,sex) 
+        VALUES('周杰伦','台湾台北',6,'zhoujielun@sohu.com',1)
+        
+  注意：1.字段名和值列表个数和位置要对应。字段名三个，值也要有三个。
+       2.值的数据类型、精度和小数位必须与相应的字段类型匹配。
+       3.不能给标识列（自增的id等）做赋值
+       4.字段不允许为空的必须插入数据，允许空的数据插入可以用null（null和''是不同的，前者是空，未填，后者是空字符串）
+       5.插入值必须符合设置的检查约束。比如邮件地址必须有@。default关键字使用默认值 例：VALUES('周杰伦',default,6,'zhoujielun@sohu.com',1)
+     
+ 2.多行插入（通过UNION关键字合并数据进行插入）
+   语法：INSERT INTO 表名(字段1,字段2,字段3)
+         SELECT 值1,值2,值3 UNION
+         SELECT 值1,值2,值3 UNION
+         .
+         .
+    示例：insert into student(name,address,grade,email,sex)
+          select '张三', '松江区',1,null,1 union
+          select '李四', '徐汇区',5,'lisi@sohu.com',1 union
+          select '王霞', '普陀区',4,'wangxia@sohu.com',0 union
+    注意：select中的值不可用default代替    
+          
+ 3.多行插入（通过INSERT SELECT语句将现有表中的数据添加到已存在的表中）   
+   语法：
+   示例：
+   注意：
+  
