@@ -1,0 +1,36 @@
+1.使用UPDATE SET更新数据行
+  语法：UPDATE 表名 SET 字段1=更新值1,字段2=更新值2,字段3=更新值3
+       WHERE 更新条件
+  示例1：UPDATE Student SET sex=0
+  
+  示例2：UPDATE Student 
+        SET ANDDRESS='上海松江'
+        WHERE ANDDRESS='上海黄埔'
+        （将 ANDDRESS字段='上海黄埔'的记录中的ANDDRESS字段值替换为‘上海松江’）
+        
+        UPDATE Scores
+        SET Scores=Scores + 5
+        WHERE Scores <= 95
+   注意：1.示例1没有加where条件，跟新数据风险大。一般不用
+        2.跟新多列数据使用逗号隔开
+        
+        
+2.使用DELETE删除数据行
+  语法：DILETE FROM 表名
+        WHERE 条件表达式
+   示例：DELETE FROM Student
+         WHERE Name='张三丰'
+         （删除Name='张三丰'这行的记录）
+   注意：删除表数据时，要注意是否有子表关联了主表数据。要先删除子表的相关记录，再删除主表
+   
+   
+3.使用TRUNCATE删除所有数据
+  语法：TRUNCATE TABLE 表名
+  示例：TRUNCATE TABLE Student
+  
+  注意：1.TRUNCATE TABLE Student功能等于 DELETE FROM Student。
+        2.TRUNCATE TABLE Student效率高于DELETE。
+        3.TRUNCATE删除的数据不能回复，慎用。
+        4.表结构、列、约束等不被改动。
+        5.不能用于有外键约束印用的表。
+        6.标识列重新开始编号。
