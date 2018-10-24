@@ -1,0 +1,39 @@
+1. 索引的分类：
+    单值索引：单列字段，比如name字段；一个表可以有多个单值索引
+    主键索引：设置索引的列不能有重复值，比如id字段（字段的值不允许为null）
+    唯一索引：设置索引的列不能有重复值，比如id字段（字段的值允许为null）
+    复合索引：多个列构成的索引（相当于二级目录），复合索引不是必须每个索引列都用。
+             比如，复合索引列 姓名 、年龄，查找姓名，有相同姓名的再去年龄查找。如果姓名查找后没有同名，就无需使用年龄查找了。
+             
+             
+2. 创建索引：
+   1) create方式
+   语法：   create  索引类型 索引名 on 表名(字段名)
+   单值索引：create index name_index on students(name);
+   唯一索引：create unique index studentId_index on students(studentId);
+   复合索引：create index dept_name_index on students(dept,name);(区别与单值索引的地方就是多个字段）
+   
+   2) alter table方式
+   语法：   alter table 表名 add 索引类型 索引名 (字段)
+   单值索引：alter table students add index name_index(name);
+   唯一索引：alter table students add  unique index studentId_index(studentId);
+   复合索引：alter table students add  index dept_name_index(dept,name);(区别与单值索引的地方就是多个字段）
+   
+   注意：如果一个字段是primary key，则该字段默认就是主键索引。
+   
+   
+3. 删除索引：
+   语法：drop index 索引名 on 表名；
+   示例：drop index  name_index on students;
+   
+4. 查询索引：
+   语法：show index form 表名；（或者 show index form 表名 \G）
+   示例： show index form students；
+   
+ commit; 只有增删改查需要commit。  
+5. SQL性能问题：
+   1) 分析SQL的执行计划：（属人为优化）
+      关键字explain，可以模拟sql优化器执行SQL语句，从而让开发人员知道自己编写的sql状况  
+      语法：explain Sql语句；(explain select * from students;)
+   2) MySql查询优化其会干扰我们的优化
+   优化方法：官网介绍 https://dev.mysql.com/doc/refman/5.5/en/optimization.html
