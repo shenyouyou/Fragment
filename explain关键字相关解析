@@ -35,13 +35,32 @@ explain关键字的使用
                        上述sql用到的索引时t.tcid,即teacher表中的tcid(外键)字段，如果teacher表的数据个数和连接查询的数据个数一致，则有可能达到
             4) ref：非唯一性索引，对于每个索引键的查询，返回匹配的所有行，（0行或多行）。
                     例：explain select * from teacher where tname='章子怡'；（已设置tname为索引列）
-            5) range
-            6) index
+            5) range: 检索指定范围的行，where后面时一个范围查询（beween，> <>=,in,注意：in有时候会失效，从而转为无索引all）
+                      例：alter table teacher add index tid_index(tid);新增tid列为索引列
+                          explain select t.* from teacher t where t.tid in (1,2);
+                          explain select t.* from teacher t where t.tid<3;
+            6) index：查询全部索引中数据。
+                      explain select tid from teacher;(tid是索引列，只需要扫描索引表，不要所有表中的所有数据)
+            7) all: 查询全部表中数据。
    
-   5. possible_key: 预测使用到的索引
+   5. possible_key: 预测使用到的索引，参考价值
    6. key: 实际使用到的索引，
-   7. key_len: 实际使用索引的长度
-   8. ref: 表之间的印用，
-   9. rows: 通过索引查询到的数据量
+   7. key_len: 实际使用索引的长度。用于判断复合索引是否被完全使用。
+   
+               一个可变字段类型（varchar()类型），用2个字节标识
+               一个不允许为null的索引---key_len :60
+               一个允许为null的索引，则会使用1个字节用于标识。---key_len ：61
+               如果使用多个索引，比如一个非null，一个允许null，key_len ：121
+               例如：一个复合索引，name_name1_index(name,name1),其中name非null，name1允许null
+                     explain select * from students where name=''; --key_len :60
+                     explain select * from students where name1=''; --key_len :121 (复合索引是层级关系，查过第一个索引才会到第二个。)
+           注意：utf8：一个字符3个字节
+                 gbk：一个字符2个字节
+                 latin：一个字符1个字节
+                     
+   8. ref: 指明表之间的引用，可以是字段也可以是const常量（注意与type中的ref值区分）
+   9. rows: 通过索引优化查询到的数据量
    10. Extra: 额外优化信息
+              using  filesort:表示 性能消耗大，需要额外的一次排序（查询）
+              
    
