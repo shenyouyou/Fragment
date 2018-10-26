@@ -63,4 +63,8 @@ explain关键字的使用
    10. Extra: 额外优化信息
               using  filesort:表示 性能消耗大，需要额外的一次排序（查询）
               
-   
+   复合索引：不能跨列，where和order by按照复合索引的顺序使用，不要跨列或无序使用
+            例如：alter table test1 add index idx_a1_a2_a3 (a1,a2,a3);
+                  explain select * from test1 where a1='' order by a2;
+                  explain select * from test1 where a1='' order by a3;--using  filesort
+                  explain select * from test1 where a2='' order by a3;--using  filesort
