@@ -61,10 +61,19 @@ explain关键字的使用
    8. ref: 指明表之间的引用，可以是字段也可以是const常量（注意与type中的ref值区分）
    9. rows: 通过索引优化查询到的数据量
    10. Extra: 额外优化信息
-              using  filesort:表示 性能消耗大，需要额外的一次排序（查询）
+              1) using  filesort:表示 性能消耗大，需要额外的一次排序（查询）,常见于order by
               
-   复合索引：不能跨列，where和order by按照复合索引的顺序使用，不要跨列或无序使用
-            例如：alter table test1 add index idx_a1_a2_a3 (a1,a2,a3);
+              复合索引：不能跨列，where和order by按照复合索引的顺序使用，不要跨列或无序使用
+              例如：alter table test1 add index idx_a1_a2_a3 (a1,a2,a3);
                   explain select * from test1 where a1='' order by a2;
                   explain select * from test1 where a1='' order by a3;--using  filesort
                   explain select * from test1 where a2='' order by a3;--using  filesort
+              
+              2) using temporary: 性能损耗大，需要额外。一般出现在group by语句中。
+                 查询哪些列，就用那些列分组。
+                 
+                 
+                 解析过程：from ...on...join..where....group by....having....select dinstinct ...order by linit...
+                 
+              
+
