@@ -25,6 +25,18 @@ explain关键字的使用
    4. type: 索引类型(有索引的前提下，才能对type进行优化)
             system >const >eq_ref >ref >range >index >all
             其中，system，const只是理想情况；实际能达到级别ref>range
+            1) system:只有一条数据的系统表； 或 衍生表只有一条数据的主查询。
+            2) const：仅仅能查到一条数据的SQL，用于Primary key或unique索引
+                      如：select tid from table1 where tid =1;
+            3) eq_ref：唯一性索引，对于每个索引键的查询，返回匹配唯一行数据.
+                       查询的结果集和系统表数据能一对一对应。(不会出现一对多或者对应不上)
+                       select....from...where...name =...常见于唯一索引和主键索引
+                       select t.tcid from teacher t,teacherCard tc where t.tcid=tc.tcid;
+                       上述sql用到的索引时t.tcid,即teacher表中的tcid(外键)字段，如果teacher表的数据个数和连接查询的数据个数一致，则有可能达到
+            4) ref：非唯一性索引，对于每个索引键的查询，返回匹配的所有行，（0行或多行）。
+                    例：explain select * from teacher where tname='章子怡'；（已设置tname为索引列）
+            5) range
+            6) index
    
    5. possible_key: 预测使用到的索引
    6. key: 实际使用到的索引，
