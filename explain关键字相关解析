@@ -1,0 +1,14 @@
+explain关键字的使用
+   语法：explain sql语句；（explain select * from tb；）
+   各字段说明：
+   1. id: 编号
+   2.select_type: 查询类型
+   3. table: 表
+   4. type: 索引类型
+   5. possible_key: 预测使用到的索引
+   6. key: 实际使用到的索引，
+   7. key_len: 实际使用索引的长度
+   8. ref: 表之间的印用，
+   9. rows: 通过索引查询到的数据量
+   10. Extra: 额外优化信息
+   
