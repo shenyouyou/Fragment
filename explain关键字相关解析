@@ -2,9 +2,30 @@ explain关键字的使用
    语法：explain sql语句；（explain select * from tb；）
    各字段说明：
    1. id: 编号
-   2.select_type: 查询类型
-   3. table: 表
-   4. type: 索引类型
+      1) id值相同，从上往下，顺序执行
+         表的执行顺序，因数据的个数改变而改变（原因：笛卡儿积），数据量小的表优先查询。
+      2) id值不同，id值越大越优先执行（本质：嵌套子查询时，先查内层，再查外层）。
+      3) 子查询+多表：id值有相同，又有不同，id值越大越优先；id值相同，从上往下顺序执行。
+         
+   2. select_type: 查询类型
+      PRIMARY:包含子查询SQL中的主查询（最外层查询）
+      SUBQUERY:包含子查询SQL中的子查询（非最外层查询）
+      simple：简单查询，不包含子查询、union
+              如：from select * from course where tid in (1,2)) cr 
+      derived：衍生查询，查询的时候用到的临时表
+               1) 在from子查询中，有且只有一张表
+                   如：explain select cr.cname from (select * from course where tid in (1,2)) cr
+                       上述SQL中子查询的结果集cr就是一张临时表
+                       
+               2) 在from子查询中，如果有table1 union table2，则table1就是derived，table2就是union
+                  explain select cr.cname from (select * from course where tid =1 union select * from course where tid =2)) cr
+               union result：告知开发人员，哪些表之间存在union查询
+   
+   3. table: 指明查询的表
+   4. type: 索引类型(有索引的前提下，才能对type进行优化)
+            system >const >eq_ref >ref >range >index >all
+            其中，system，const只是理想情况；实际能达到级别ref>range
+   
    5. possible_key: 预测使用到的索引
    6. key: 实际使用到的索引，
    7. key_len: 实际使用索引的长度
